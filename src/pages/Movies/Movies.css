@@ -1,0 +1,77 @@
+.movie-list {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 2em;
+}
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 1rem;
+}
+
+.movie-card {
+  position: relative;
+  overflow: hidden; /* Evitar scroll vertical dentro de .movie-card */
+  width: 100%; /* Ajustar al ancho máximo disponible */
+  aspect-ratio: 2/3; /* Proporción de aspecto para mantener una relación de aspecto agradable */
+  transition: filter 0.3s ease-in-out;
+}
+
+.movie-card img {
+  width: 100%;
+  height: 100%; /* Ajusta la altura al 100% */
+  object-fit: cover; /* Ajusta la imagen manteniendo su relación de aspecto y cubriendo el contenedor */
+  border-radius: 20px;
+  transition: filter 0.3s ease-in-out; /* Agregamos una transición suave */
+}
+
+.no-image {
+  width: 100%;
+  height: 100%;
+  border-radius: 20px;
+  background-color: #3e3e3e; /* Color gris */
+}
+
+.movie-card:hover img,
+.no-image:hover  {
+  filter: brightness(70%); /* Oscurecer al pasar el ratón */
+  cursor: pointer; /* Cambiar el cursor a un pointer */
+}
+
+.movie-title {
+  position: absolute;
+  bottom: 0; /* Coloca el título en la parte inferior */
+  left: 0;
+  width: 100%;
+  color: white;
+  font-size: 16px;
+  font-weight: bold;
+  text-align: center;
+  background-color: rgba(0, 0, 0, 0.7);
+  padding: 10px;
+  border-radius: 0 0 10px 10px; /* Ajusta el radio de la esquina inferior */
+  box-sizing: border-box;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.movie-card:hover .movie-title {
+  opacity: 0; /* Ocultar el título al pasar el ratón */
+}
+
+@media screen and (max-width: 600px) {
+  .movie-card {
+    aspect-ratio: 1/1; /* Cambiar la proporción de aspecto en pantallas más pequeñas */
+  }
+  .movie-title {
+    font-size: 14px;
+    left: 25%;
+    width: 50%;
+    border-radius: 0;
+    border-radius: 10px 10px 0 0; /* Ajusta el radio de la esquina superior */
+  }
+  .movie-card img {
+    object-fit: contain;
+    border-radius: 30%;
+  }
+}

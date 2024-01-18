@@ -1,0 +1,50 @@
+/* Register.css */
+.register-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 90vh;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+}
+
+.label-form {
+    font-size: 1.3vw;
+    margin-top: 0.5em;
+    padding-bottom: 0.4em;
+}
+
+.input-form, .error-message {
+    width: 20vw;
+    margin-bottom: 1em;
+}
+
+.input-form {
+    padding: 0.7em;
+    border-radius: 8px;
+}
+
+.error-message {
+    width: 15.2em;
+    text-align: justify;
+    color: red;
+    margin: 0;
+}
+
+.button-form {
+    margin-top: 1.5em;
+    padding: 0.7em;
+    font-size: 1.3vw;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+.button-form:disabled {
+    background-color: #a7a7a7;
+    cursor: not-allowed;
+}
