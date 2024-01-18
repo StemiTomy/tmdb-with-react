@@ -23,6 +23,15 @@ const generateJWT = (user) => {
   return jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '24h' });
 };
 
+// Después de todas tus rutas de API
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('dist'));
+  app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
+  });
+}
+
+
 app.post('/register', async (req, res) => {
   try {
     const { email, password, tmdb } = req.body;
