@@ -3,13 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
 const Login = ({ onLogin }) => {
-    let apiUrl;
-
-    if (process.env.NODE_ENV === 'production') {
-        apiUrl = process.env.REACT_APP_API_URL;
-    } else {
-        apiUrl = 'http://localhost:3001';
-    }
+    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3001';
 
     const [formData, setFormData] = useState({
         email: '',
