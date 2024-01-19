@@ -57,7 +57,7 @@ const Register = ({ onLogin }) => {
           }),
         });
 
-        const loginData = await loginResponse.json();
+        const data = await loginResponse.json();
         if (loginResponse.ok) {
           // Si el inicio de sesión es exitoso, utilizamos la función onLogin
           onLogin(data.token, data.userApiKey); // Llama a la función onLogin con el token, api 
