@@ -4,6 +4,14 @@ import { useNavigate } from 'react-router-dom';
 import './Register.css';
 
 const Register = ({ onLogin }) => {
+  let apiUrl;
+
+  if (process.env.NODE_ENV === 'production') {
+      apiUrl = process.env.REACT_APP_API_URL;
+  } else {
+      apiUrl = 'http://localhost:3001';
+  }
+
   const [formData, setFormData] = useState({
     email: '',
     password: '',
@@ -33,7 +41,7 @@ const Register = ({ onLogin }) => {
     };
 
     try {
-      const response = await fetch('http://localhost:3001/register', {
+      const response = await fetch(`${apiUrl}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -44,7 +52,7 @@ const Register = ({ onLogin }) => {
       if (response.ok) {
         // Aquí asumimos que el registro fue exitoso
         // Ahora intentamos iniciar sesión automáticamente
-        const loginResponse = await fetch('http://localhost:3001/login', {
+        const loginResponse = await fetch(`${apiUrl}/login`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

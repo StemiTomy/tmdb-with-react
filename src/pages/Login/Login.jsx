@@ -3,6 +3,14 @@ import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
 const Login = ({ onLogin }) => {
+    let apiUrl;
+
+    if (process.env.NODE_ENV === 'production') {
+        apiUrl = process.env.REACT_APP_API_URL;
+    } else {
+        apiUrl = 'http://localhost:3001';
+    }
+
     const [formData, setFormData] = useState({
         email: '',
         password: ''
@@ -22,7 +30,7 @@ const Login = ({ onLogin }) => {
         e.preventDefault();
 
         try {
-            const response = await fetch('http://localhost:3001/login', {
+            const response = await fetch(`${apiUrl}/login`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
