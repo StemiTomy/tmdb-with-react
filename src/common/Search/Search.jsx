@@ -36,7 +36,7 @@ const Search = ({ apiKey }) => {
                     .then((resultado) => {
                         updateMovies(resultado.data.results);
                         // Redirige a la ruta /Movies después de completar la búsqueda
-                        navigate('/movies');
+                        navigate('/movieSearch');
                     })
                     .catch((error) => console.log(error));
             }, 250);

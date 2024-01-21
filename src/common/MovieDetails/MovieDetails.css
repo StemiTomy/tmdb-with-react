@@ -1,0 +1,252 @@
+.movie-info {
+    padding: 2em 2em;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.movie-poster-wrapper,
+.movie-poster,
+.movie-poster-info {
+    line-height: 0;
+}
+
+.movie-poster {
+    border-radius: 8px;
+    border-bottom-left-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+/* deabjo del poster */
+.movie-poster-info {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    background-color: #242424;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    padding: 1.5em 0;
+}
+
+.movie-poster-info ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    justify-content: space-around;
+    flex-wrap: wrap;
+    width: 100%;
+}
+
+.movie-poster-info ul li a{
+    font-weight: 600;
+    display: inline-block;
+    color: white;
+}
+
+.movie-header-wrapper {
+    display: flex;
+}
+
+.movie-header-info {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    align-content: center;
+    box-sizing: border-box;
+    padding-left: 2em;
+}
+
+.movie-info-div {
+    width: 100%;
+    margin-bottom: 24px;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+/* titulo, pegi, fecha, duracion */
+
+h2 {
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    font-size: 2.2rem;
+}
+
+h2 a {
+    font-weight: 700;
+    text-decoration: none;
+    color: white;
+}
+
+h2 span {
+    opacity: .8;
+    font-weight: 400;
+}
+
+.certification {
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    color: rgba(255, 255, 255, 0.6);
+    padding: 0.06em 4px 0.15em !important;
+    margin-right: 0.5em;
+}
+
+.release::before,
+.runtime::before {
+    content: "•";
+    margin-left: 0.25em;
+    margin-right: 0.4em;
+    font-size: 1.1em;
+    line-height: 1;
+    width: 100%;
+    height: 100%;
+}
+
+.runtime::before {
+    margin-left: 0.5em;
+    margin-right: 0.5em;
+}
+
+/* tagline, descripcion, director */
+h3.tagline {
+    padding-bottom: 1em;
+    margin-bottom: 0;
+    font-size: 1.1em;
+    font-weight: 400;
+    font-style: italic;
+    opacity: .7;
+}
+
+h3 {
+    width: 100%;
+    margin: 0 0 8px;
+}
+
+.movie-info-div div {
+    width: 100%;
+}
+
+.language-h3,
+.director-h3 {
+    margin-top: 0.5em;
+    font-style: italic;
+    font-weight: 400;
+}
+
+.director-h3 {
+    margin-top: 0;
+}
+
+.language,
+.director {
+    font-style: normal;
+    font-weight: 700;
+}
+
+/* wrapper */
+.content-wrapper {
+    padding: 30px 40px;
+}
+
+/* Sección reparto */
+.cast-list {
+    padding-bottom: 2em;
+    border-bottom: 1px solid #898989;
+}
+
+.cast-list-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.8em;
+    font-size: 1.7em;
+}
+
+.cast-scroller {
+    overflow-x: auto;
+    white-space: nowrap;
+}
+
+
+.cast-scroller::-webkit-scrollbar {
+    width: 12px; /* Ajusta el ancho de la barra de desplazamiento */
+    background-color: #242424; /* Color de fondo */
+}
+
+.cast-scroller::-webkit-scrollbar-track {
+    background-color: #242424; /* Color de fondo del track */
+    border-radius: 10px; /* Bordes redondeados */
+}
+
+.cast-scroller::-webkit-scrollbar-thumb {
+    background-color: #888; /* Color del thumb */
+    border-radius: 10px; /* Bordes redondeados */
+}
+
+.cast-cards {
+    padding: 0;
+    padding-bottom: 1em;
+    margin: 0;
+    list-style: none;
+}
+
+.card {
+    display: inline-block;
+    width: 150px;
+    /* Ajusta según tus preferencias */
+    margin-right: 10px;
+    text-align: center;
+    vertical-align: top;
+}
+
+.actor-image {
+    width: 100%;
+    height: auto;
+    border-radius: 12px;
+}
+
+.actor-name {
+    margin: 5px 0;
+    font-weight: bold;
+}
+
+.character-name {
+    margin: 0;
+    color: #666;
+    font-size: 0.9em;
+}
+
+/* Estilos para el scroll */
+.cast-scroller::-webkit-scrollbar {
+    height: 9px;
+    background-color: #242424;
+}
+
+.cast-scroller::-webkit-scrollbar-track {
+    background-color: #242424;
+    border-radius: 10px;
+}
+
+.cast-scroller::-webkit-scrollbar-thumb {
+    background-color: #888;
+}
+
+/* Peliculas similares */
+.movie-list-title {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-top: 0.8em;
+    margin-bottom: 0.8em;
+    font-size: 1.7em;
+}
+
+.movie-details .movie-list {
+    max-width: 90%;
+    margin: 0 auto;
+}
+
+.movie-details .movie-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 1rem;
+}
