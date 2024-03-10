@@ -77,18 +77,15 @@ export const fetchSimilarMovies = async (movieId, apiKey) => {
 };
 
 // DDBB calls
-const api = axios.create({
-  baseURL: 'http://localhost:3001', // Reemplaza 3001 con el puerto de tu servidor
-});
-
 export const handleFavoriteClick = async (movieId, movieTitle) => {
   try {
     const token = localStorage.getItem('token');
     console.log(movieId, movieTitle, token)
 
-    await api.post('/favorites', { movieId, movieTitle }, {
+    await axios.post('/favorites', { movieId, movieTitle }, {
       headers: {
-        Authorization: `Bearer ${token}`, // Incluye el token en el encabezado de autorización
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer '+token // Incluye el token en el encabezado de autorización
       },
     });
     
