@@ -1,0 +1,47 @@
+/* Profile.css */
+.profile-container {
+    display: flex;
+    padding: 20px;
+    justify-content: center; /* Para centrar horizontalmente */
+    align-items: center; /* Para centrar verticalmente */
+}
+
+.profile-sidebar {
+    /* padding: 4em; */
+}
+
+.profile-image {
+    width: 100%;
+    border-radius: 8px;
+    margin-bottom: 20px;
+
+    min-width: 100px;
+    min-height: 100px;
+    /*max-width: 300px; /* Tamaño máximo de ancho */
+    max-height: 350px; /* Tamaño máximo de alto */
+}
+
+.profile-content {
+    flex: 1;
+    padding: 3em;
+    margin-left: 2em;
+}
+
+.profile-sections {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+button {
+    cursor: pointer;
+    color: white;
+    border: none;
+}
+
+button:hover {
+    color: black;
+    background-color: white;
+    transition: all 0.5s ease;
+    
+}

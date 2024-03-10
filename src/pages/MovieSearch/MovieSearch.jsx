@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import { useSearch } from '../../common/SearchContext';
 
 const MovieSearch = () => {
-  const { movies, criteria } = useSearch();
+  const { movies, criteria, currentPage, setCurrentPage, totalPages } = useSearch();
 
   return (
     <div className="movie-list">
@@ -26,6 +26,15 @@ const MovieSearch = () => {
             </div>
           </Link>
         ))}
+      </div>
+      <div className="pagination">
+        <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
+          Anterior
+        </button>
+        <span className='pagination-page'>Página {currentPage} de {totalPages}</span>
+        <button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage >= totalPages}>
+          Siguiente
+        </button>
       </div>
     </div>
   );

@@ -59,6 +59,17 @@
   opacity: 0; /* Ocultar el título al pasar el ratón */
 }
 
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 1em;
+}
+
+.pagination-page {
+  padding: 0 1em;
+}
+
 @media screen and (max-width: 600px) {
   .movie-card {
     aspect-ratio: 1/1; /* Cambiar la proporción de aspecto en pantallas más pequeñas */

@@ -7,11 +7,11 @@ import './Search.css';
 
 const Search = ({ apiKey }) => {
     const [showInput, setShowInput] = useState(false);
-    const { updateMovies, updateCriteria } = useSearch();
+    const { updateMovies, updateCriteria, currentPage, setCurrentPage, setTotalPages  } = useSearch();
     const [criteria, setCriteria] = useState("");
     const inputRef = useRef(null);
-    const navigate = useNavigate(); // Obtén la función navigate de react-router-dom
-    const currentPath = location.pathname; // Obtén la ruta actual desde useLocation
+    const navigate = useNavigate();
+    const currentPath = location.pathname;
 
 
     const handleButtonClick = () => {
@@ -26,23 +26,36 @@ const Search = ({ apiKey }) => {
     }, [showInput]);
 
     useEffect(() => {
-        updateCriteria(criteria); // Actualiza la criteria en el contexto cuando cambia
+        updateCriteria(criteria);
     }, [criteria, updateCriteria]);
 
+    const performSearch = () => {
+        const debouncear = setTimeout(() => {
+            bringMovies(criteria, apiKey, currentPage)
+                .then((resultado) => {
+                    updateMovies(resultado.data.results);
+                    setTotalPages(resultado.data.total_pages);
+                    navigate('/movieSearch');
+                })
+                .catch((error) => console.log(error));
+        }, 250);
+        return () => clearTimeout(debouncear);
+    };
+
+    // Efecto para manejar cambios en los criterios de búsqueda
     useEffect(() => {
         if (criteria !== "") {
-            const debouncear = setTimeout(() => {
-                bringMovies(criteria, apiKey)
-                    .then((resultado) => {
-                        updateMovies(resultado.data.results);
-                        // Redirige a la ruta /Movies después de completar la búsqueda
-                        navigate('/movieSearch');
-                    })
-                    .catch((error) => console.log(error));
-            }, 250);
-            return () => clearTimeout(debouncear);
+            setCurrentPage(1); // Restablece la página a 1 solo si la búsqueda cambia
+            performSearch();
         }
     }, [criteria]);
+
+    // Efecto para manejar cambio de página
+    useEffect(() => {
+        if (criteria !== "") {
+            performSearch();
+        }
+    }, [currentPage]);
 
     return (
         <div className="search-container">

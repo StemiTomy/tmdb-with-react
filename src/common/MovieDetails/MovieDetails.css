@@ -107,6 +107,15 @@ h2 span {
 }
 
 /* tagline, descripcion, director */
+.icons {
+    font-size: 2em;
+    cursor: pointer;
+}
+
+.icons > * {
+    margin-right: 0.7em; /* Añade espacio entre los íconos */
+}
+
 h3.tagline {
     padding-bottom: 1em;
     margin-bottom: 0;

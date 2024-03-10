@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './Login.css';
 
 const Login = ({ onLogin }) => {
-    const apiUrl = process.env.REACT_APP_API_URL || 'http://localhost:3001';
+    const apiUrl = 'http://localhost:3001';
 
     const [formData, setFormData] = useState({
         email: '',
@@ -39,8 +39,8 @@ const Login = ({ onLogin }) => {
             if (data.token) {
                 // Aquí recibimos el token JWT desde el servidor
                 localStorage.setItem('token', data.token); // Guarda el token en localStorage
-                localStorage.setItem('userApiKey', data.userApiKey);
-                onLogin(data.token, data.userApiKey); // Llama a la función onLogin con el token, api                alert('¡Conectado correctamente!');
+                localStorage.setItem('tmdb_api_key', data.tmdb_api_key);
+                onLogin(data.token, data.tmdb_api_key); // Llama a la función onLogin con el token, api                alert('¡Conectado correctamente!');
                 navigate('/profile');
             } else {
                 // Manejar respuesta cuando no hay token (credenciales incorrectas)

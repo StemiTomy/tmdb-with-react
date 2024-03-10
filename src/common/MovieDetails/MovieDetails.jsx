@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { fetchMovieDetails, fetchDirector, fetchMovieCast, fetchSimilarMovies } from "../../services/apiCalls";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faBookmark, faHeart } from '@fortawesome/free-regular-svg-icons';
+import { faBookmark as solidBookmark, faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
+
+import { fetchMovieDetails, fetchDirector, fetchMovieCast, fetchSimilarMovies, handleFavoriteClick, handleWatchLaterClick } from "../../services/apiCalls";
 import { useParams, Link } from 'react-router-dom';
 import './MovieDetails.css'
 
@@ -31,7 +35,7 @@ const MovieDetails = ({ apiKey }) => {
 
   // arreglar el login para meter un setTimeOut
   if (!movieDetails) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>; // TODO: arreglar esto...
   }
 
   // detalles pelicula
@@ -95,7 +99,7 @@ const MovieDetails = ({ apiKey }) => {
 
                 <div className='movie-info-div'>
                   <h2>
-                    <a href="">{movieDetails.title}</a>
+                    <a href="">{movieDetails.title}</a> {/** TODO: arreglar que no haya ningún link ni nada, ya veremos lo que haremos*/}
                     <span>({getYear(movieDetails.release_date)})</span>
                   </h2>
                   <div>
@@ -103,6 +107,11 @@ const MovieDetails = ({ apiKey }) => {
                     <span className='release'>{getFormattedReleaseDate(movieDetails.release_date)}</span>
                     <span className='runtime'>{formatRuntime(movieDetails.runtime)}</span>
                   </div>
+                </div>
+
+                <div className='icons'>
+                  <FontAwesomeIcon icon={faHeart} className="fa-heart-solid" onClick={() => handleFavoriteClick(movieDetails.id, movieDetails.title)} />
+                  <FontAwesomeIcon icon={faBookmark} className="fa-bookmark-solid" onClick={() => handleFavoriteClick(movieDetails.id)} />
                 </div>
 
                 <div className='movie-info-div'>

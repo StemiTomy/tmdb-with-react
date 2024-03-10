@@ -4,6 +4,8 @@ import React, { createContext, useContext, useState } from 'react';
 const SearchContext = createContext();
 
 export const SearchProvider = ({ children }) => {
+    const [currentPage, setCurrentPage] = useState(1);
+    const [totalPages, setTotalPages] = useState(0);
     const [movies, setMovies] = useState([]);
     const [criteria, setCriteria] = useState("");
 
@@ -16,7 +18,7 @@ export const SearchProvider = ({ children }) => {
     };
 
     return (
-        <SearchContext.Provider value={{ movies, updateMovies, criteria, updateCriteria }}>
+        <SearchContext.Provider value={{ movies, updateMovies, criteria, updateCriteria, currentPage, setCurrentPage, totalPages, setTotalPages }}>
             {children}
         </SearchContext.Provider>
     );

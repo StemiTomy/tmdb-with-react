@@ -10,23 +10,23 @@ export const AuthProvider = ({ children }) => {
 
   useEffect(() => {
     const token = localStorage.getItem('token');
-    const userApiKey = localStorage.getItem('userApiKey');
-    if (token && userApiKey) {
+    const tmdb_api_key = localStorage.getItem('tmdb_api_key');
+    if (token && tmdb_api_key) {
       setIsAuthenticated(true);
-      setApiKey(userApiKey);
+      setApiKey(tmdb_api_key);
     }
   }, []);
 
-  const login = (token, userApiKey) => {
+  const login = (token, tmdb_api_key) => {
     localStorage.setItem('token', token);
-    localStorage.setItem('userApiKey', userApiKey);
+    localStorage.setItem('tmdb_api_key', tmdb_api_key);
     setIsAuthenticated(true);
-    setApiKey(userApiKey);
+    setApiKey(tmdb_api_key);
   };
 
   const logout = () => {
     localStorage.removeItem('token');
-    localStorage.removeItem('userApiKey');
+    localStorage.removeItem('tmdb_api_key');
     setIsAuthenticated(false);
     setApiKey('');
   };

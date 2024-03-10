@@ -4,19 +4,22 @@ import '../MovieSearch/MovieSearch.css';
 import fetchPopularMovies from "../../services/apiCalls";
 
 const PopularMovies = ({ apiKey }) => {
+  const MAX_PAGES = 10;
   const [movies, setMovies] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const popularMovies = await fetchPopularMovies(apiKey);
-        setMovies(popularMovies);
+        const popularMovies = await fetchPopularMovies(apiKey, currentPage);
+        console.log(popularMovies);
+        setMovies(popularMovies.results);
       } catch (error) {
         console.error('Error al obtener las películas populares:', error);
       }
     };
     fetchData();
-  }, [apiKey]);
+  }, [apiKey, currentPage]);
 
   return (
     <div className="movie-list">
@@ -37,6 +40,15 @@ const PopularMovies = ({ apiKey }) => {
             </div>
           </Link>
         ))}
+      </div>
+      <div className="pagination">
+        <button onClick={() => setCurrentPage(currentPage - 1)} disabled={currentPage === 1}>
+          Anterior
+        </button>
+        <span className='pagination-page'>Página {currentPage} de {MAX_PAGES}</span>
+        <button onClick={() => setCurrentPage(currentPage + 1)} disabled={currentPage >= MAX_PAGES}>
+          Siguiente
+        </button>
       </div>
     </div>
   );

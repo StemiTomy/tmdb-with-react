@@ -7,7 +7,8 @@ import { useAuth } from '../../services/AuthContext';
 import ProtectedRoutes from '../../services/ProtectedRoutes';
 import AuthenticatedRoutes from '../../services/AuthenticatedRoutes';
 import MovieDetails from '../../common/MovieDetails/MovieDetails';
-import MovieGenre from '../MovieGenre/MovieGenre.jsx';
+import MovieGenre from '../MovieGenre/MovieGenre';
+import Profile from '../Profile/Profile';
 
 export const Body = () => {
     const { apiKey, login } = useAuth();
@@ -19,6 +20,7 @@ export const Body = () => {
             <Route element={<ProtectedRoutes />}>
                 <Route path="/*" element={<PopularMovies apiKey={apiKey} />} />
                 <Route path="/movieSearch" element={<MovieSearch apiKey={apiKey} />} />
+                <Route path="/profile" element={<Profile apiKey={apiKey} />} />
                 <Route path="/movie/:id" element={<MovieDetails apiKey={apiKey} />} />
                 <Route path="/genre/:genreId" element={<MovieGenre apiKey={apiKey} />} />
             </Route>
