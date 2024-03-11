@@ -23,14 +23,6 @@ const generateJWT = (user) => {
   return jwt.sign(user, process.env.JWT_SECRET, { expiresIn: '24h' });
 };
 
-// Después de todas tus rutas de API
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('dist'));
-  app.get('*', (req, res) => {
-      res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
-  });
-}
-
 const authMiddleware = (req, res, next) => {
   try {
     const token = req.headers.authorization.split(' ')[1]; // 'Bearer TOKEN'
@@ -138,6 +130,15 @@ app.post('/api/user/watchlater', authMiddleware, (req, res) => {
     res.status(200).send('Película añadida a ver más tarde');
   });
 });
+
+
+// Después de todas tus rutas de API
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static('dist'));
+  app.get('*', (req, res) => {
+      res.sendFile(path.resolve(__dirname, 'dist', 'index.html'));
+  });
+}
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
