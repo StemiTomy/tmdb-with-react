@@ -61,7 +61,7 @@ const Register = ({ onLogin }) => {
         const data = await loginResponse.json();
         if (loginResponse.ok) {
           // Si el inicio de sesión es exitoso, utilizamos la función onLogin
-          onLogin(data.token, data.tmdb_api_key); // Llama a la función onLogin con el token, api 
+          onLogin(data.token, data.userApiKey); // Llama a la función onLogin con el token, api 
           alert('¡Registrado correctamente!');
           navigate('/profile');// Puedes redirigir al usuario a la página de inicio o mostrar un mensaje de éxito
         } else { // else login

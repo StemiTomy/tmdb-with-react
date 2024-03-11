@@ -3,8 +3,6 @@ import jwt from 'jsonwebtoken';
 import bodyParser from 'body-parser';
 import User from './Usuario.js';
 import cors from 'cors';
-import mongoose from 'mongoose'; // no vamos a usar mongo db.
-import mysql from 'mysql';
 import mySQLConnector from './MySQLConnector.js';
 import bcrypt from 'bcrypt';
 import dotenv from 'dotenv';
@@ -47,7 +45,7 @@ app.post('/register', async (req, res) => {
 
     // Crear un nuevo usuario
     const hashedPassword = await bcrypt.hash(password, 10);
-    const [newUser] = await connection.getConnection().promise().query('INSERT INTO usuarios (email, password, tmdb_api_key) VALUES (?, ?, ?)', [email, hashedPassword, tmdb]);
+    const [newUser] = await connection.getConnection().promise().query('INSERT INTO usuarios (email, password, userApiKey) VALUES (?, ?, ?)', [email, hashedPassword, tmdb]);
 
     const userId = newUser.insertId;
     const payload = { userId };
@@ -80,7 +78,7 @@ app.post('/login', async (req, res) => {
     // Generar un JWT si las credenciales son correctas
     const payload = { userId: user.id };
     const token = generateJWT(payload);
-    res.json({ message: 'Inicio de sesión exitoso', token, tmdb_api_key: user.tmdb_api_key });
+    res.json({ message: 'Inicio de sesión exitoso', token, userApiKey: user.userApiKey });
   } catch (error) {
     console.error('Error en el inicio de sesión:', error);
     res.status(500).send('Error en el servidor');

@@ -4,21 +4,21 @@ import mySQLConnector from './MySQLConnector.js';
 const connection = mySQLConnector;
 
 class Usuario {
-  constructor({ id, nombre, apellido, email, password, tmdb_api_key, imagen }) {
+  constructor({ id, nombre, apellido, email, password, userApiKey, imagen }) {
     this.id = id;
     this.nombre = nombre;
     this.apellido = apellido;
     this.email = email;
     this.password = password;
-    this.tmdb_api_key = tmdb_api_key;
+    this.userApiKey = userApiKey;
     this.imagen = imagen;
   }
 
   async save() {
     try {
       const hashedPassword = await bcrypt.hash(this.password, 10);
-      const sql = 'INSERT INTO usuarios (id, nombre, apellido, email, password, tmdb_api_key, imagen) VALUES (?, ?, ?, ?, ?, ?, ?)';
-      connection.query(sql, [this.id, this.nombre, this.apellido, this.email, hashedPassword, this.tmdb_api_key, this.imagen], (err, results) => {
+      const sql = 'INSERT INTO usuarios (id, nombre, apellido, email, password, userApiKey, imagen) VALUES (?, ?, ?, ?, ?, ?, ?)';
+      connection.query(sql, [this.id, this.nombre, this.apellido, this.email, hashedPassword, this.userApiKey, this.imagen], (err, results) => {
         if (err) {
           console.error('Error al guardar usuario en MySQL:', err);
           return;

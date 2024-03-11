@@ -4,7 +4,7 @@ CREATE TABLE IF NOT EXISTS usuarios (
     apellido VARCHAR(255),
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
-    tmdb_api_key VARCHAR(255) UNIQUE NOT NULL,
+    userApiKey VARCHAR(255) UNIQUE NOT NULL,
     imagen BLOB -- puede contener datos binarios, como imágenes, documentos PDF, etc.
 );
 CREATE TABLE IF NOT EXISTS peliculas (
