@@ -2,9 +2,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const Register = ({ onLogin }) => {
-  const apiUrl = 'http://localhost:3001';
+  const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
 
   const [formData, setFormData] = useState({

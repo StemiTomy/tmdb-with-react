@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
+import dotenv from 'dotenv';
+
+dotenv.config();
 
 const Login = ({ onLogin }) => {
-    const apiUrl = 'http://localhost:3001';
+    const apiUrl = process.env.REACT_APP_BACKEND_URL;
 
     const [formData, setFormData] = useState({
         email: '',
