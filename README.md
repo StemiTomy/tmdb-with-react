@@ -1,13 +1,10 @@
 # tmdb-with-react
 
-Como servidor nodeJS, como backend MongoDB.
+Front React puro, backend Firebase.
 
-```npm run dev``` y ```npm run start-backend``` para iniciar
-front y backend respectivamente.
+```npm run start``` y ```npm run start-backend``` para iniciar frontend.
 
-```npm run build``` para construir la app.
+```npm run build``` para construir la app para producción.
 
-Usamos fontawseome instalalndolos con este comando (los gratuitos) ```npm install @fortawesome react-fontawesome @fortawesome free-solid-svg-icons @fortawesome/free-regular-svg-icons @fortawesome/free-brands-svg-icons
+Usamos fontawseome con este comando (los gratuitos) ```npm install @fortawesome react-fontawesome @fortawesome free-solid-svg-icons @fortawesome/free-regular-svg-icons @fortawesome/free-brands-svg-icons
 ```
-
-El front está hecho con react. El back está hecho con Node.js. La base de datos está hecha con MySQL.
