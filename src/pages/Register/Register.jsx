@@ -43,24 +43,22 @@ const Register = ({ onLogin }) => {
       const userRef = ref(database, 'users/' + user.uid);
       const userDataToSave = {
         email: userData.email,
-        password: userData.password,
+        //password: userData.password,
         tmdb: userData.tmdb,
         last_login: Date.now()
       };
 
       await set(userRef, userDataToSave);
 
-      console.log('¡Registrado correctamente!');
-      alert('¡Registrado correctamente!');
+      const snapshot = await get(userRef);
+      const userDataFromDB = snapshot.val();
+      const token = await user.getIdToken();
+      localStorage.setItem('token', token);
 
-      // TODO: pasarle el apikey de alguna manera
-      // TODO: pasarle el token/cookie session de alguna manera
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('userApiKey', data.userApiKey);
-      console.log(data.userApiKey)
-      onLogin(data.token, data.userApiKey);
+      onLogin(token, userDataFromDB.tmdb);
 
-      
+      console.log('Registrado correctamente!');
+      alert('Registrado correctamente!');      
       navigate('/profile');
 
     } catch (error) {
