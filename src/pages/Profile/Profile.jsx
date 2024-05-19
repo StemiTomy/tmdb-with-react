@@ -5,7 +5,6 @@ import PropTypes from 'prop-types';
 
 const Profile = ({ apiKey }) => {
     const [userEmail, setUserEmail] = useState('stemitomy@gmail.com'); // Suponiendo un email por defecto
-    const FAKE_APIKEY = "1234567891011121314151617181920"
     const [favoriteMovies, setFavoriteMovies] = useState([]);
     const [moviesToWatch, setMoviesToWatch] = useState([]);
     const [favoriteActors, setFavoriteActors] = useState([]);
@@ -25,7 +24,7 @@ const Profile = ({ apiKey }) => {
                 <div className="profile-content">
                     <h1>Mi Perfil</h1>
                     <p>Email: {userEmail}</p>
-                    <p>API Key: {FAKE_APIKEY}</p>
+                    <p>API Key: {apiKey}</p>
                     <button onClick={handleChangePassword}>Cambiar Contraseña</button>
                 </div>
             </div>
