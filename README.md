@@ -11,3 +11,5 @@ Usamos fontawseome con este comando (los gratuitos) ```npm install @fortawesome 
 
 La app en producción es:
 https://web-app-50f58.web.app/
+
+```firbase deploy``` para hacer el deploy público.
