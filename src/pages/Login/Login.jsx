@@ -1,12 +1,12 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Login.css';
-import dotenv from 'dotenv';
+import PropTypes from 'prop-types';
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { auth, database } from '../../../firebaseConfig';
+import { get, ref, update } from 'firebase/database';
 
-dotenv.config();
-
-const Login = ({ onLogin }) => {
-    const apiUrl = process.env.REACT_APP_BACKEND_URL;
+export const Login = ({ onLogin }) => {
 
     const [formData, setFormData] = useState({
         email: '',
@@ -26,35 +26,37 @@ const Login = ({ onLogin }) => {
     const handleLogin = async (e) => {
         e.preventDefault();
 
-        try {
-            const response = await fetch(`${apiUrl}/login`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify({
-                    email: formData.email,
-                    password: formData.password
-                }),
-            });
+        const userData = {
+            email: formData.email,
+            password: formData.password
+        };
 
-            const data = await response.json();
-            if (data.token) {
-                // Aquí recibimos el token JWT desde el servidor
-                localStorage.setItem('token', data.token); // Guarda el token en localStorage
-                localStorage.setItem('userApiKey', data.userApiKey);
-                console.log(data.userApiKey)
-                onLogin(data.token, data.userApiKey); // Llama a la función onLogin con el token, api                alert('¡Conectado correctamente!');
-                navigate('/profile');
-            } else {
-                // Manejar respuesta cuando no hay token (credenciales incorrectas)
-                setErrorMessage('Credenciales incorrectas');
-            }
+        try {
+            const userCredential = await signInWithEmailAndPassword(auth, userData.email, userData.password)
+            const user = userCredential.user;
+
+            const userRef = ref(database, 'users/' + user.uid);
+            const userDataToSave = {
+                last_login: Date.now()
+            };
+
+            await update(userRef, userDataToSave);
+
+            const snapshot = await get(userRef);
+            const userDataFromDB = snapshot.val();
+            const token = await user.getIdToken();
+            localStorage.setItem('token', token);
+
+            onLogin(token, userDataFromDB.tmdb);
+
+            console.log('Logeado correctamente!');
+            alert('Logeado correctamente!');
+            navigate('/profile');
         } catch (error) {
-            // Manejar errores de la petición
-            console.error('Error en el login:', error);
-            setErrorMessage('Error al intentar conectarse al servidor');
+            console.error('Error en el registro: ' + error.message);
+            alert('Error en el registro: ' + error.message);
         }
+
     };
 
     return (
@@ -85,6 +87,10 @@ const Login = ({ onLogin }) => {
             {errorMessage && <p className="error-message">{errorMessage}</p>}
         </div>
     );
+};
+
+Login.propTypes = {
+    onLogin: PropTypes.func.isRequired,
 };
 
 export default Login;

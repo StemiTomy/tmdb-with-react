@@ -1,14 +1,14 @@
 // Register.jsx
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Register.css';
-import dotenv from 'dotenv';
+import PropTypes from 'prop-types';
+import { createUserWithEmailAndPassword } from 'firebase/auth';
+import { auth, database } from '../../../firebaseConfig'; // Ajusta la ruta según sea necesario
+import { get, ref, set } from 'firebase/database';
 
-dotenv.config();
 
 const Register = ({ onLogin }) => {
-  const apiUrl = process.env.REACT_APP_BACKEND_URL;
-
 
   const [formData, setFormData] = useState({
     email: '',
@@ -27,11 +27,9 @@ const Register = ({ onLogin }) => {
     setIsFormValid(areFieldsFilled && !areErrorsPresent);
   }, [formData, errorMessages]);
 
-  const handleSubmit = async (e) => {
+  const handleRegister = async (e) => {
     e.preventDefault();
 
-    // En lugar de codificar la contraseña, envíala tal cual al servidor
-    // Deja que el servidor se encargue de la encriptación de manera segura
     const userData = {
       email: formData.email,
       password: formData.password,
@@ -39,48 +37,37 @@ const Register = ({ onLogin }) => {
     };
 
     try {
-      const response = await fetch(`${apiUrl}/register`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(userData),
-      });
+      const userCredential = await createUserWithEmailAndPassword(auth, userData.email, userData.password)
+      const user = userCredential.user;
 
-      if (response.ok) {
-        // Aquí asumimos que el registro fue exitoso
-        // Ahora intentamos iniciar sesión automáticamente
-        const loginResponse = await fetch(`${apiUrl}/login`, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-          }),
-        });
+      const userRef = ref(database, 'users/' + user.uid);
+      const userDataToSave = {
+        email: userData.email,
+        password: userData.password,
+        tmdb: userData.tmdb,
+        last_login: Date.now()
+      };
 
-        const data = await loginResponse.json();
-        if (loginResponse.ok) {
-          // Si el inicio de sesión es exitoso, utilizamos la función onLogin
-          onLogin(data.token, data.userApiKey); // Llama a la función onLogin con el token, api 
-          alert('¡Registrado correctamente!');
-          navigate('/profile');// Puedes redirigir al usuario a la página de inicio o mostrar un mensaje de éxito
-        } else { // else login
-          // Manejar el caso en que el inicio de sesión falla después del registro
-          // Mostrar un mensaje de error o redirigir al formulario de inicio de sesión
-          alert("¡Error al iniciar sesión!")
-        }
+      await set(userRef, userDataToSave);
 
-      } else { // else register
-        // Manejar errores, por ejemplo, mostrar un mensaje si el email ya está en uso
-        alert("¡Email en uso!")
-      }
+      console.log('¡Registrado correctamente!');
+      alert('¡Registrado correctamente!');
+
+      // TODO: pasarle el apikey de alguna manera
+      // TODO: pasarle el token/cookie session de alguna manera
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('userApiKey', data.userApiKey);
+      console.log(data.userApiKey)
+      onLogin(data.token, data.userApiKey);
+
+      
+      navigate('/profile');
+
     } catch (error) {
-      console.error('Error en el registro:', error);
-      // Manejar errores de red, mostrar mensaje al usuario
+      console.error('Error en el registro: ' + error.message);
+      alert('Error en el registro: ' + error.message);
     }
+
   };
 
   const validateField = (fieldName, value) => {
@@ -152,7 +139,7 @@ const Register = ({ onLogin }) => {
 
   return (
     <div className="register-container">
-      <form className="form" onSubmit={handleSubmit}>
+      <form className="form" onSubmit={handleRegister}>
         <label className="label-form">E-Mail</label>
         <input
           className="input-form"
@@ -208,6 +195,10 @@ const Register = ({ onLogin }) => {
       </form>
     </div>
   );
+};
+
+Register.propTypes = {
+  onLogin: PropTypes.func.isRequired,
 };
 
 export default Register;

@@ -1,5 +1,6 @@
 // SearchContext.js
-import React, { createContext, useContext, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
+import PropTypes from 'prop-types';
 
 const SearchContext = createContext();
 
@@ -30,4 +31,8 @@ export const useSearch = () => {
         throw new Error('useSearch must be used within a SearchProvider');
     }
     return context;
+};
+
+SearchProvider.propTypes = {
+    children: PropTypes.func.isRequired,
 };

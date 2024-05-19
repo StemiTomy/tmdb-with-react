@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import '../MovieSearch/MovieSearch.css';
 import fetchPopularMovies from "../../services/apiCalls";
+import PropTypes from 'prop-types';
 
 const PopularMovies = ({ apiKey }) => {
   const MAX_PAGES = 10;
@@ -52,6 +53,10 @@ const PopularMovies = ({ apiKey }) => {
       </div>
     </div>
   );
+};
+
+PopularMovies.propTypes = {
+  apiKey: PropTypes.func.isRequired,
 };
 
 export default PopularMovies;

@@ -1,7 +1,8 @@
-import React, { useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { fetchMoviesByGenre } from "../../services/apiCalls";
 import { useParams, Link, useLocation } from 'react-router-dom';
 import '../MovieSearch/MovieSearch.css';
+import PropTypes from 'prop-types';
 
 const MovieGenre = ({ apiKey }) => {
     const [movies, setMovies] = useState([]);
@@ -30,7 +31,7 @@ const MovieGenre = ({ apiKey }) => {
 
     return (
         <div className='movie-list'>
-            <h1 className='movie-list-title'>Películas de '{genreName}'</h1>
+            <h1 className='movie-list-title'>Películas de `{genreName}`</h1>
             <div className="movie-grid">
                 {movies.map((movie) => (
                     <Link to={`/movie/${movie.id}`} key={movie.id}>
@@ -50,6 +51,10 @@ const MovieGenre = ({ apiKey }) => {
             </div>
         </div>
     );
+};
+
+MovieGenre.propTypes = {
+    apiKey: PropTypes.func.isRequired,
 };
 
 export default MovieGenre;

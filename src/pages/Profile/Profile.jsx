@@ -1,7 +1,7 @@
 // Profile.jsx
-import React, { useState, useEffect } from 'react';
+import { useState } from 'react';
 import './Profile.css';
-// Puedes importar otros componentes o hooks si es necesario
+import PropTypes from 'prop-types';
 
 const Profile = ({ apiKey }) => {
     const [userEmail, setUserEmail] = useState('stemitomy@gmail.com'); // Suponiendo un email por defecto
@@ -47,6 +47,10 @@ const Profile = ({ apiKey }) => {
             </div>
         </>
     );
+};
+
+Profile.propTypes = {
+    apiKey: PropTypes.func.isRequired,
 };
 
 export default Profile;

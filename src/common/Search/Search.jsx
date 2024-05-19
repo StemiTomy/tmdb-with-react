@@ -1,13 +1,14 @@
 // Search.jsx
-import React, { useState, useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { bringMovies } from "../../services/apiCalls";
 import { useSearch } from '../SearchContext';
 import { useNavigate } from 'react-router-dom';
+import PropTypes from 'prop-types';
 import './Search.css';
 
 const Search = ({ apiKey }) => {
     const [showInput, setShowInput] = useState(false);
-    const { updateMovies, updateCriteria, currentPage, setCurrentPage, setTotalPages  } = useSearch();
+    const { updateMovies, updateCriteria, currentPage, setCurrentPage, setTotalPages } = useSearch();
     const [criteria, setCriteria] = useState("");
     const inputRef = useRef(null);
     const navigate = useNavigate();
@@ -71,6 +72,10 @@ const Search = ({ apiKey }) => {
                 onChange={(e) => setCriteria(e.target.value)} />}
         </div>
     );
+};
+
+Search.propTypes = {
+    apiKey: PropTypes.func.isRequired,
 };
 
 export default Search;

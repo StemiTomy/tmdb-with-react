@@ -1,5 +1,4 @@
 // Movies.jsx
-import React from 'react';
 import './MovieSearch.css';
 import { Link } from 'react-router-dom';
 import { useSearch } from '../../common/SearchContext';

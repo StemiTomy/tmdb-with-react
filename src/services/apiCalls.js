@@ -77,6 +77,7 @@ export const fetchSimilarMovies = async (movieId, apiKey) => {
 };
 
 // DDBB calls
+/*
 export const handleFavoriteClick = async (movieId, movieTitle) => {
   try {
     const token = localStorage.getItem('token');
@@ -106,5 +107,5 @@ export const handleWatchLaterClick = async (movieId) => {
     console.error('Error al guardar la película para ver más tarde', error);
   }
 };
-
+*/
 export default fetchPopularMovies; 

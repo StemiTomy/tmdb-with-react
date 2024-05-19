@@ -1,15 +1,12 @@
 {
-  "name": "final-bootcamp-project",
+  "name": "final-movie-project",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
-    "start": "concurrently \"npm run dev\" \"npm run start-backend\"",
-    "dev": "vite",
+    "start": "vite",
     "build": "vite build",
-    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0",
-    "preview": "vite preview",
-    "start-backend": "node server.js"
+    "lint": "eslint . --ext js,jsx --report-unused-disable-directives --max-warnings 0"
   },
   "dependencies": {
     "@fortawesome/free-brands-svg-icons": "^6.5.1",
@@ -17,17 +14,11 @@
     "@fortawesome/free-solid-svg-icons": "^6.5.1",
     "@fortawesome/react-fontawesome": "^0.2.0",
     "axios": "^1.6.2",
-    "bcrypt": "^5.1.1",
-    "body-parser": "^1.20.2",
-    "concurrently": "^8.2.2",
-    "cors": "^2.8.5",
-    "dotenv": "^16.3.1",
-    "express": "^4.18.2",
-    "jsonwebtoken": "^9.0.2",
-    "mysql2": "^3.9.2",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-router-dom": "^6.21.2"
+    "firebase": "^10.12.0",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.21.2",
+    "uWebSockets.js": "github:uNetworking/uWebSockets.js#v20.43.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.37",
@@ -37,6 +28,6 @@
     "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-react-hooks": "^4.6.0",
     "eslint-plugin-react-refresh": "^0.4.4",
-    "vite": "^5.0.0"
+    "vite": "^5.2.11"
   }
 }
