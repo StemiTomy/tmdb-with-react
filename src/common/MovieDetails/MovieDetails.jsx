@@ -1,11 +1,10 @@
 import { useEffect, useState } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faBookmark, faHeart } from '@fortawesome/free-regular-svg-icons';
 //import { faBookmark as solidBookmark, faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
 import { fetchMovieDetails, fetchDirector, fetchMovieCast, fetchSimilarMovies } from "../../services/apiCalls";
 import { useParams, Link } from 'react-router-dom';
 import './MovieDetails.css'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 
 const MovieDetails = ({ apiKey }) => {
   const [movieDetails, setMovieDetails] = useState(null);
@@ -115,8 +114,8 @@ const MovieDetails = ({ apiKey }) => {
                 </div>*/}
 
                 <div className='icons'>
-                  <FontAwesomeIcon icon={faHeart} className="fa-heart-solid" />
-                  <FontAwesomeIcon icon={faBookmark} className="fa-bookmark-solid" />
+                  <FontAwesomeIcon icon="user" className="fa-heart-solid"  />
+                  <FontAwesomeIcon icon="search" className="fa-bookmark-solid"/>
                 </div>
 
                 <div className='movie-info-div'>

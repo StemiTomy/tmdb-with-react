@@ -3,24 +3,29 @@ import { Link } from 'react-router-dom';
 import '../MovieSearch/MovieSearch.css';
 import fetchPopularMovies from "../../services/apiCalls";
 import PropTypes from 'prop-types';
+import { useQuery } from '@tanstack/react-query';
+import { useAuth } from '../../contexts/AuthContext';
+import Spinner from '../../components/Spinner';
 
-const PopularMovies = ({ apiKey }) => {
-  const MAX_PAGES = 10;
-  const [movies, setMovies] = useState([]);
+const MAX_PAGES = 10;
+
+const PopularMovies = () => {
+  const { apiKey } = useAuth();
   const [currentPage, setCurrentPage] = useState(1);
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const popularMovies = await fetchPopularMovies(apiKey, currentPage);
-        console.log(popularMovies);
-        setMovies(popularMovies.results);
-      } catch (error) {
-        console.error('Error al obtener las películas populares:', error);
-      }
-    };
-    fetchData();
-  }, [apiKey, currentPage]);
+  const { data, isLoading, error } = useQuery({
+    queryKey: ['popularMovies', currentPage],
+    queryFn: () => fetchPopularMovies(apiKey, currentPage),
+    enabled: !!apiKey, // no ejecutes hasta tener la apiKey
+    keepPreviousData: true,
+    staleTime: 1000 * 60 * 5,
+  });
+  
+
+  if (isLoading) return <Spinner />;
+  if (error) return <p>Error al obtener películas: {error.message}</p>;
+
+  const movies = data?.results || [];
 
   return (
     <div className="movie-list">
@@ -53,10 +58,6 @@ const PopularMovies = ({ apiKey }) => {
       </div>
     </div>
   );
-};
-
-PopularMovies.propTypes = {
-  apiKey: PropTypes.func.isRequired,
 };
 
 export default PopularMovies;

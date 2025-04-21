@@ -1,5 +1,5 @@
 import { Outlet, Navigate } from 'react-router-dom';
-import { useAuth } from './AuthContext';
+import { useAuth } from '../contexts/AuthContext';
 import PropTypes from 'prop-types';
 
 const AuthenticatedRoutes = ({ redirectTo }) => {
@@ -8,7 +8,7 @@ const AuthenticatedRoutes = ({ redirectTo }) => {
 };
 
 AuthenticatedRoutes.propTypes = {
-    redirectTo: PropTypes.func.isRequired,
+    redirectTo: PropTypes.string.isRequired,
 };
 
 export default AuthenticatedRoutes;

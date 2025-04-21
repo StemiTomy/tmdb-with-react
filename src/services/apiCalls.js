@@ -57,12 +57,25 @@ export const fetchMoviesByGenre = async (genreId, apiKey) => {
 };
 
 export const fetchPopularMovies = async (apiKey, page = 1) => {
+  if (!apiKey) {
+    throw new Error('No API key provided');
+  }
+
   try {
-    const response = await axios.get(`${ROOT_API_TMDB}movie/popular?language=en-US&page=${page}&api_key=${apiKey}`);
+    const response = await axios.get(
+      `${ROOT_API_TMDB}movie/popular`,
+      {
+        params: {
+          language: 'en-US',
+          page,
+          api_key: apiKey,
+        }
+      }
+    );
     return response.data;
   } catch (error) {
     console.error('Error fetching popular movies:', error);
-    throw error;
+    throw new Error(error.response?.data?.status_message || 'Error al obtener las películas');
   }
 };
 

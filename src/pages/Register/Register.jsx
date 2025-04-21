@@ -6,21 +6,23 @@ import PropTypes from 'prop-types';
 import { createUserWithEmailAndPassword } from 'firebase/auth';
 import { auth, database } from '../../../firebaseConfig'; // Ajusta la ruta según sea necesario
 import { get, ref, set } from 'firebase/database';
+import { useAuth } from '../../contexts/AuthContext';
+import Spinner from '../../components/Spinner';
 
 
-const Register = ({ onLogin }) => {
-
+const Register = () => {
+  const { login } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     confirmPassword: '',
     tmdb: ''
   });
-  const navigate = useNavigate();
   const [errorMessages, setErrorMessages] = useState({});
-  
-
   const [isFormValid, setIsFormValid] = useState(false);
+
   useEffect(() => {
     const areFieldsFilled = formData.email && formData.password && formData.confirmPassword && formData.tmdb;
     const areErrorsPresent = Object.values(errorMessages).some(errorMessage => errorMessage);
@@ -29,6 +31,7 @@ const Register = ({ onLogin }) => {
 
   const handleRegister = async (e) => {
     e.preventDefault();
+    setIsLoading(true);
 
     const userData = {
       email: formData.email,
@@ -49,21 +52,23 @@ const Register = ({ onLogin }) => {
       };
 
       await set(userRef, userDataToSave);
-
       const snapshot = await get(userRef);
       const userDataFromDB = snapshot.val();
       const token = await user.getIdToken();
-      localStorage.setItem('token', token);
+      const apiKey = userDataFromDB?.tmdb;
 
-      onLogin(token, userDataFromDB.tmdb);
-
-      console.log('Registrado correctamente!');
-      alert('Registrado correctamente!');      
-      navigate('/profile');
-
+      if (token && apiKey) {
+        login(token, apiKey);
+        alert('Registrado correctamente!');
+        navigate('/profile');
+      } else {
+        console.warn("No se encontró la API key o el token.");
+      }
     } catch (error) {
       console.error('Error en el registro: ' + error.message);
       alert('Error en el registro: ' + error.message);
+    } finally {
+      setIsLoading(false);
     }
 
   };
@@ -187,16 +192,12 @@ const Register = ({ onLogin }) => {
         />
         {errorMessages.tmdb && <p className="error-message">{errorMessages.tmdb}</p>}
 
-        <button className="button-form" type="submit" disabled={!isFormValid}>
-          Register
+        <button className="button-form" type="submit" disabled={!isFormValid || isLoading}>
+          {isLoading ? <Spinner /> : 'Register'}
         </button>
       </form>
     </div>
   );
-};
-
-Register.propTypes = {
-  onLogin: PropTypes.func.isRequired,
 };
 
 export default Register;
