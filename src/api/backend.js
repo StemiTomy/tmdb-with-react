@@ -57,7 +57,7 @@ export const loginUserOLD = async ({ email, password }) => {
     return response.data;
 };
 
-export const loginUser = async ({ email, password }) => {
+export const loginUserAllauth = async ({ email, password }) => {
     const response = await backendApi.post(
       '/accounts/login/',
       new URLSearchParams({
@@ -70,5 +70,14 @@ export const loginUser = async ({ email, password }) => {
         },
       }
     );
+    return response.data;
+  };
+
+
+  export const loginUser = async ({ email, password }) => {
+    const response = await backendApi.post('/api/auth/login/', {
+      email,
+      password
+    });
     return response.data;
   };
