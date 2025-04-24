@@ -6,6 +6,8 @@ import AuthenticatedRoutes from './AuthenticatedRoutes';
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from '../../firebaseConfig';
 import Spinner from '../components/Spinner';
+import Register2 from '../pages/auth/Register2';
+import Login2 from '../pages/auth/Login2';
 
 // 🧠 Lazy imports (solo se descargan si se visitan)
 const MovieSearch = lazy(() => import('../pages/MovieSearch/MovieSearch'));
@@ -53,8 +55,10 @@ export const AppRoutes = () => {
                     <Route path="/genre/:genreId" element={<MovieGenre apiKey={apiKey} />} />
                 </Route>
                 <Route element={<AuthenticatedRoutes redirectTo="/profile" />}>
-                    <Route path="/register" element={<Register/>} />
-                    <Route path="/login" element={<Login/>} />
+                    {/* <Route path="/register" element={<Register/>} />    esto es la auth para firebase    */}
+                    <Route path="/register" element={<Register2/>} />
+                    {/* <Route path="/login" element={<Login/>} /> esto es la auth para firebase*/}
+                    <Route path="/login" element={<Login2/>} />
                 </Route>
             </Routes>
         </Suspense>

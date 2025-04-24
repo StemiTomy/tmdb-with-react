@@ -34,5 +34,5 @@ export const useSearch = () => {
 };
 
 SearchProvider.propTypes = {
-    children: PropTypes.func.isRequired,
+    children: PropTypes.node.isRequired,
 };
