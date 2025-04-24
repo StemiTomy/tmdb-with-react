@@ -27,7 +27,30 @@ const Register2 = () => {
       }
     },
     onError: (error) => {
-      message.error(error.response?.data?.detail || 'Error al registrar');
+      const data = error?.response?.data;
+    
+      if (!data) {
+        message.error('Error desconocido al registrar');
+        return;
+      }
+    
+      if (typeof data === 'string') {
+        message.error(data);
+      } else if (Array.isArray(data)) {
+        // Ejemplo: ["Origen no reconocido para el registro"]
+        data.forEach((msg) => message.error(msg));
+      } else if (typeof data === 'object') {
+        // Ejemplo: { email: ["Este campo es obligatorio"], password1: ["Muy corta"] }
+        Object.entries(data).forEach(([field, messages]) => {
+          if (Array.isArray(messages)) {
+            messages.forEach((msg) => message.error(`${field}: ${msg}`));
+          } else {
+            message.error(`${field}: ${messages}`);
+          }
+        });
+      } else {
+        message.error('Error inesperado en la respuesta del servidor');
+      }
     }
   });
 

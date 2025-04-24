@@ -27,7 +27,8 @@ export const registerUser = async (userData) => {
     return response.data;
   } catch (error) {
     console.error('Error during registration:', error);
-    throw new Error(error.response?.data?.detail || 'Error en el registro');
+    // throw new Error(error.response?.data?.detail || 'Error en el registro');
+    throw error;
   }
 };
 
