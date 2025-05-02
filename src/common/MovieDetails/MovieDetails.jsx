@@ -1,12 +1,17 @@
 import { useEffect, useState } from 'react';
 //import { faBookmark as solidBookmark, faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
 import PropTypes from 'prop-types';
-import { fetchMovieDetails, fetchDirector, fetchMovieCast, fetchSimilarMovies } from "../../services/apiCalls";
+import { fetchMovieDetails, fetchCredits, fetchSimilarMovies } from '../../api';
 import { useParams, Link } from 'react-router-dom';
 import './MovieDetails.css'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { useTranslation } from 'react-i18next';
+import { Row, Col, Card, Typography } from 'antd';
+
+const { Title } = Typography;
 
 const MovieDetails = ({ apiKey }) => {
+  const { i18n } = useTranslation();
   const [movieDetails, setMovieDetails] = useState(null);
   const { id } = useParams();
   const [director, setDirector] = useState('');
@@ -16,21 +21,22 @@ const MovieDetails = ({ apiKey }) => {
   useEffect(() => {
     const loadMovieDetails = async () => {
       try {
-        const details = await fetchMovieDetails(id, apiKey);
+        const details = await fetchMovieDetails(id, i18n.language);
         setMovieDetails(details);
-        const directorName = await fetchDirector(id, apiKey);
+  
+        const { director: directorName, cast: castData } = await fetchCredits(id, i18n.language);
         setDirector(directorName);
-        const castData = await fetchMovieCast(id, apiKey);
         setCast(castData);
-        const movies = await fetchSimilarMovies(id, apiKey);
-        setSimilarMovies(movies);
+  
+        const similar = await fetchSimilarMovies(id, i18n.language);
+        setSimilarMovies(similar.results || []);
       } catch (error) {
-        console.error('Error loading movie details, director, reparto o similarMovies: ', error);
+        console.error('Error loading movie details or credits:', error);
       }
     };
-
+  
     loadMovieDetails();
-  }, [id, apiKey]); // apiKey no sé hasta qué punto
+  }, [id, apiKey, i18n.language]); // apiKey no sé hasta qué punto
 
   // arreglar el login para meter un setTimeOut
   if (!movieDetails) {
@@ -160,26 +166,56 @@ const MovieDetails = ({ apiKey }) => {
 
         {/* Seccion peliculas parecidas */}
 
-        <div className="movie-list">
-          <h2 className='movie-list-title'>Películas Similares</h2>
-          <div className="movie-grid">
+        {/* Sección de películas similares con Ant Design */}
+        <div className="movie-list" style={{ padding: '2rem' }}>
+          <Title level={2} style={{ textAlign: 'center', marginBottom: '2rem' }}>
+            Películas Similares
+          </Title>
+          <Row gutter={[16, 24]} justify="center">
             {similarMovies.map((movie) => (
-              <Link to={`/movie/${movie.id}`} key={movie.id}>
-                <div className="movie-card">
-                  <h2 className="movie-title">{movie.title}</h2>
-                  {movie.poster_path ? (
-                    <img
-                      src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
-                      alt={movie.title}
+              <Col
+                key={movie.id}
+                xs={24}
+                sm={12}
+                md={8}
+                lg={6}
+                xl={4}
+              >
+                <Link to={`/movie/${movie.id}`}>
+                  <Card
+                    hoverable
+                    cover={
+                      movie.poster_path ? (
+                        <img
+                          alt={movie.title}
+                          src={`https://image.tmdb.org/t/p/w300${movie.poster_path}`}
+                          style={{ borderRadius: '8px', height: '300px', objectFit: 'cover' }}
+                        />
+                      ) : (
+                        <div style={{
+                          height: '300px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          background: '#f0f0f0',
+                          borderRadius: '8px'
+                        }}>
+                          Sin imagen
+                        </div>
+                      )
+                    }
+                  >
+                    <Card.Meta
+                      title={movie.title}
+                      style={{ textAlign: 'center', fontWeight: 'bold' }}
                     />
-                  ) : (
-                    <div className="no-image"></div>
-                  )}
-                </div>
-              </Link>
+                  </Card>
+                </Link>
+              </Col>
             ))}
-          </div>
+          </Row>
         </div>
+
       </div>
 
     </div>

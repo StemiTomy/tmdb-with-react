@@ -1,135 +1,160 @@
-// Profile.jsx
 import { useState, useEffect } from 'react';
-import './Profile.css';
-import PropTypes from 'prop-types';
+import { Upload, Button, Card, Row, Col, Avatar, Typography, message, Spin } from 'antd';
+import { UploadOutlined, UserOutlined } from '@ant-design/icons';
 import { useAuth } from '../../contexts/AuthContext';
-import { auth } from '../../../firebaseConfig';
-import { Upload, Button, message } from 'antd';
-import { UploadOutlined } from '@ant-design/icons';
 import axios from 'axios';
+import { useThemeAntd } from '../../contexts/ThemeProviderAntd';
+import { useTranslation } from 'react-i18next';
+import { fetchFotoDePerfil, actualizarFotoDePerfil } from '../../api';
+
+const { Title, Text } = Typography;
 
 const Profile = () => {
-    const { apiKey } = useAuth();
-    const [isLoading, setIsLoading] = useState(true);
-    const [userData, setUserData] = useState({});
-    const [imagenPerfil, setImagenPerfil] = useState(null);
+  const { themeMode } = useThemeAntd();
+  const { t } = useTranslation();
+  const { user, isLoading } = useAuth();
+  const [imagenPerfil, setImagenPerfil] = useState(null);
+  const [cargandoImagen, setCargandoImagen] = useState(false);
 
-    const [favoriteMovies, setFavoriteMovies] = useState([]);
-    const [moviesToWatch, setMoviesToWatch] = useState([]);
-    const [favoriteActors, setFavoriteActors] = useState([]);
+  const isDarkMode = themeMode === 'dark';
 
-    const handleChangePassword = () => {
-        // Función para manejar el cambio de contraseña
-    };
+  const cargarFotoDePerfil = async () => {
+    try {
+      const { url } = await fetchFotoDePerfil();
+      setImagenPerfil(url);
+    } catch (error) {
+      console.warn('No hay foto de perfil:', error.message);
+      setImagenPerfil(null);
+    }
+  };
 
-    const subirImagen = async (file) => {
-        const formData = new FormData();
-        formData.append('archivo', file);
+  const subirImagen = async (file) => {
+    const formData = new FormData();
+    formData.append('archivo', file);
+  
+    setCargandoImagen(true);
+  
+    try {
+      await actualizarFotoDePerfil(formData);
+      message.success(t('profile_upload_success') || 'Imagen actualizada');
+      await cargarFotoDePerfil();
+    } catch (err) {
+      console.error(err);
+      message.error(t('profile_upload_error') || 'Error al subir imagen');
+    } finally {
+      setCargandoImagen(false);
+    }
+  };
 
-        try {
-            const res = await axios.post(
-                'http://127.0.0.1:8000/api/tmdb/upload/',
-                formData,
-                {
-                    headers: {
-                        'Authorization': `Token ${apiKey}`,
-                        'Content-Type': 'multipart/form-data'
-                    }
-                }
-            );
-            message.success('Imagen subida correctamente');
-            setImagenPerfil(res.data.url);
-        } catch (err) {
-            console.error(err);
-            message.error('Error al subir imagen');
-        }
-    };
+  const propsUpload = {
+    name: 'archivo',
+    maxCount: 1,
+    accept: 'image/*',
+    beforeUpload: (file) => {
+      subirImagen(file);
+      return false;
+    },
+    showUploadList: false,
+  };
 
-    const propsUpload = {
-        name: 'archivo',
-        maxCount: 1,
-        accept: 'image/*',
-        beforeUpload: (file) => {
-            subirImagen(file);
-            return false;
-        },
-        showUploadList: false,
-    };
+  useEffect(() => {
+    if (!isLoading) {
+      cargarFotoDePerfil();
+    }
+  }, [isLoading]);
 
-    useEffect(() => {
-        const user = auth.currentUser;
-        if (user) {
-            setUserData({
-                uid: user.uid,
-                email: user.email,
-                emailVerified: user.emailVerified,
-                displayName: user.displayName || '',
-                phoneNumber: user.phoneNumber || '',
-                photoURL: user.photoURL || './src/assets/foto.png',
-                providerId: user.providerId,
-                creationTime: user.metadata?.creationTime,
-                lastSignInTime: user.metadata?.lastSignInTime,
-                isAnonymous: user.isAnonymous,
-                accessToken: user.stsTokenManager?.accessToken,
-                refreshToken: user.stsTokenManager?.refreshToken,
-            });
-        }
-        setIsLoading(false);
-    }, []);
-
+  if (isLoading) {
     return (
-        <>
-            <div className="profile-container">
-                <div className="profile-sidebar">
-                    <div style={{ textAlign: 'center' }}>
-                        <img
-                            src={imagenPerfil || userData.photoURL}
-                            alt="Foto de perfil"
-                            className="profile-image"
-                            style={{ width: 120, height: 120, borderRadius: '50%', objectFit: 'cover', marginBottom: '1rem' }}
-                        />
-                        <Upload {...propsUpload}>
-                            <Button icon={<UploadOutlined />}>Subir nueva foto</Button>
-                        </Upload>
-                    </div>
-                </div>
-                <div className="profile-content">
-                    <h1>Mi Perfil</h1>
-                    <p><strong>Nombre:</strong> {userData.displayName || 'No establecido'}</p>
-                    <p><strong>Email:</strong> {userData.email}</p>
-                    <p><strong>Teléfono:</strong> {userData.phoneNumber || 'No disponible'}</p>
-                    <p><strong>UID:</strong> {userData.uid}</p>
-                    <p><strong>Proveedor:</strong> {userData.providerId}</p>
-                    <p><strong>Cuenta anónima:</strong> {userData.isAnonymous ? 'Sí' : 'No'}</p>
-                    <p><strong>Email verificado:</strong> {userData.emailVerified ? 'Sí' : 'No'}</p>
-                    <p><strong>Fecha de creación:</strong> {userData.creationTime}</p>
-                    <p><strong>Último acceso:</strong> {userData.lastSignInTime}</p>
-                    <p><strong>API Key:</strong> {apiKey}</p>
-
-                    <button onClick={handleChangePassword} style={{ marginTop: '1rem' }}>
-                        Cambiar Contraseña
-                    </button>
-                </div>
-            </div>
-            <div className="profile-sections">
-                <div className="profile-section">
-                    <div>Películas Favoritas</div>
-                </div>
-
-                <div className="profile-section">
-                    <div>Películas por Ver</div>
-                </div>
-
-                <div className="profile-section">
-                    <div>Actores Favoritos</div>
-                </div>
-            </div>
-        </>
+      <div style={{ minHeight: '60vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <Spin size="large" tip={t('profile_loading')} />
+      </div>
     );
-};
+  }
 
-Profile.propTypes = {
-    apiKey: PropTypes.func.isRequired,
+  return (
+    <div
+      style={{
+        minHeight: '100vh',
+        padding: '2rem',
+        background: isDarkMode ? '#000' : '#f0f2f5',
+      }}
+    >
+      {/* Info del perfil */}
+      <Card
+        style={{
+          maxWidth: 600,
+          margin: '0 auto 2rem',
+          padding: '2rem',
+          borderRadius: '12px',
+          boxShadow: isDarkMode
+            ? '0 4px 12px rgba(255,255,255,0.1)'
+            : '0 4px 12px rgba(0,0,0,0.1)',
+        }}
+      >
+        <Row gutter={[16, 16]} justify="center" align="middle">
+          <Col xs={24} sm={8} style={{ textAlign: 'center' }}>
+            <Avatar
+              size={120}
+              src={imagenPerfil}
+              icon={<UserOutlined />}
+              style={{
+                backgroundColor: isDarkMode ? '#1c1c1c' : '#d9d9d9',
+              }}
+            />
+            <Upload {...propsUpload}>
+              <Button
+                icon={<UploadOutlined />}
+                style={{ marginTop: '1rem' }}
+                loading={cargandoImagen}
+              >
+                {t('profile_upload_button')}
+              </Button>
+            </Upload>
+          </Col>
+
+          <Col xs={24} sm={16}>
+            <Title level={3} style={{ marginBottom: '1rem' }}>
+              {t('profile_title')}
+            </Title>
+
+            <div style={{ marginBottom: '1rem' }}>
+              <Text strong>{t('profile_email')}:</Text>
+              <br />
+              <Text>{user?.email}</Text>
+            </div>
+
+          </Col>
+        </Row>
+      </Card>
+
+      {/* Secciones del perfil */}
+      <Row gutter={[16, 16]} justify="center">
+        <Col xs={24} sm={12} md={8}>
+          <Card title={t('profile_fav_movies')} bordered={false} style={{ height: '100%', textAlign: 'center', borderRadius: '12px' }}>
+            <p>{t('profile_empty_movies')}</p>
+          </Card>
+        </Col>
+
+        <Col xs={24} sm={12} md={8}>
+          <Card title={t('profile_watchlist')} bordered={false} style={{ height: '100%', textAlign: 'center', borderRadius: '12px' }}>
+            <p>{t('profile_empty_watchlist')}</p>
+          </Card>
+        </Col>
+
+        <Col xs={24} sm={12} md={8}>
+          <Card title={t('profile_fav_actors')} bordered={false} style={{ height: '100%', textAlign: 'center', borderRadius: '12px' }}>
+            <p>{t('profile_empty_actors')}</p>
+          </Card>
+        </Col>
+
+        <Col xs={24} sm={12} md={8}>
+          <Card title={t('profile_settings')} bordered={false} style={{ height: '100%', textAlign: 'center', borderRadius: '12px' }}>
+            <p>{t('profile_empty_settings')}</p>
+          </Card>
+        </Col>
+      </Row>
+    </div>
+  );
 };
 
 export default Profile;

@@ -2,70 +2,89 @@
   font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
+  margin: 0 auto;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-}
+  /* Variables para toggle */
+  --darkbg: #251d29;
+  --darkt: #ffd1f7;
+  --lightbg: #fff;
+  --lightt: #d43370;
 
-a {
-  font-weight: 500;
-  color: #646cff;
-  text-decoration: inherit;
-}
-a:hover {
-  color: #535bf2;
+  --toggleHeight: 16em;
+  --toggleWidth: 30em;
+  --toggleBtnRadius: 10em;
+
+  --bgColor--night: #255C90;
+  --bgColor--day: #9ee3fb;
+  --mooncolor: #d9fbff;
 }
 
 body {
-  margin: 0;
-  /* display: flex; */
-  place-items: center;
-  min-width: 320px;
-  min-height: 100vh;
+  margin: 0 auto;
+  padding: 0;
+  font-size: 1.2em;
+  text-align: center;
+  transition: background-color 0.4s ease;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
+body[data-theme='dark'] {
+  background-color: #040e1b;
+  color: #FFFFFF;
 }
 
-button {
-  border-radius: 8px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
+body[data-theme='light'] {
+  background-color: #ffffff;
+  color: #1A1A1A;
+}
+
+
+/* Estilos específicos para el toggle moon/sun */
+.tdnn {
   cursor: pointer;
-  transition: border-color 0.25s;
+  margin: 0 auto;
+  font-size: 12%; /* Cambia tamaño del toggle */
+  margin-top: 0.5em;
+  position: relative;
+  height: var(--toggleHeight);
+  width: var(--toggleWidth);
+  border-radius: var(--toggleHeight);
+  transition: all 500ms ease-in-out;
+  background: var(--bgColor--night);
 }
-button:hover {
-  border-color: #646cff;
+.day {
+  background: #ffbf71;
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
+.moon {
+  position: absolute;
+  display: block;
+  border-radius: 50%;
+  transition: all 400ms ease-in-out;
+  top: 3em;
+  left: 3em;
+  transform: rotate(-75deg);
+  width: var(--toggleBtnRadius);
+  height: var(--toggleBtnRadius);
+  background: var(--bgColor--night);
+  box-shadow: 3em 2.5em 0 0em var(--mooncolor) inset,
+    rgba(255, 255, 255, 0.1) 0em -7em 0 -4.5em,
+    rgba(255, 255, 255, 0.1) 3em 7em 0 -4.5em,
+    rgba(255, 255, 255, 0.1) 2em 13em 0 -4em,
+    rgba(255, 255, 255, 0.1) 6em 2em 0 -4.1em,
+    rgba(255, 255, 255, 0.1) 8em 8em 0 -4.5em,
+    rgba(255, 255, 255, 0.1) 6em 13em 0 -4.5em,
+    rgba(255, 255, 255, 0.1) -4em 7em 0 -4.5em,
+    rgba(255, 255, 255, 0.1) -1em 10em 0 -4.5em;
 }
-
-/* esto es para que el color background se ajuste a si es de día o de noche */
-/*
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
-  }
+.sun {
+  top: 4.5em;
+  left: 18em;
+  transform: rotate(0deg);
+  width: 7em;
+  height: 7em;
+  background: #fff;
+  box-shadow: 3em 3em 0 5em #fff inset, 0 -5em 0 -2.7em #fff,
+    3.5em -3.5em 0 -3em #fff, 5em 0 0 -2.7em #fff, 3.5em 3.5em 0 -3em #fff,
+    0 5em 0 -2.7em #fff, -3.5em 3.5em 0 -3em #fff, -5em 0 0 -2.7em #fff,
+    -3.5em -3.5em 0 -3em #fff;
 }
-*/

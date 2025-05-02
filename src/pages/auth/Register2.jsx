@@ -1,46 +1,49 @@
 import React from 'react';
-import { Card, Form, Input, Button, Alert, message } from 'antd';
+import { Card, Form, Input, Button, message, theme as antdTheme } from 'antd';
 import { useMutation } from '@tanstack/react-query';
 import { registerUser, loginUser } from '../../api';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../contexts/AuthContext';
+import { useThemeAntd } from '../../contexts/ThemeProviderAntd';
+import { useTranslation } from 'react-i18next';
 
 const Register2 = () => {
   const [form] = Form.useForm();
   const navigate = useNavigate();
   const { login } = useAuth();
+  const { themeMode } = useThemeAntd();
+  const isDarkMode = themeMode === 'dark';
+  const { token } = antdTheme.useToken();
+  const { t } = useTranslation();
 
   const mutation = useMutation({
     mutationFn: registerUser,
     onSuccess: async (data, variables) => {
-      message.success('¡Registro exitoso! Iniciando sesión...');
+      message.success(t('register_success'));
       try {
         const loginResponse = await loginUser({
           email: variables.email,
           password: variables.password1,
         });
-        // Puedes ajustar esto si devuelves "token" y "api_key" por separado
-        login(loginResponse.key, loginResponse.api_key || ''); 
+        login(loginResponse.key, loginResponse.api_key || '');
         navigate('/profile');
       } catch (loginError) {
-        message.error('El registro fue exitoso pero hubo un error al iniciar sesión.');
+        message.error(t('register_login_error'));
       }
     },
     onError: (error) => {
       const data = error?.response?.data;
-    
+
       if (!data) {
-        message.error('Error desconocido al registrar');
+        message.error(t('register_error_unknown'));
         return;
       }
-    
+
       if (typeof data === 'string') {
         message.error(data);
       } else if (Array.isArray(data)) {
-        // Ejemplo: ["Origen no reconocido para el registro"]
         data.forEach((msg) => message.error(msg));
       } else if (typeof data === 'object') {
-        // Ejemplo: { email: ["Este campo es obligatorio"], password1: ["Muy corta"] }
         Object.entries(data).forEach(([field, messages]) => {
           if (Array.isArray(messages)) {
             messages.forEach((msg) => message.error(`${field}: ${msg}`));
@@ -49,7 +52,7 @@ const Register2 = () => {
           }
         });
       } else {
-        message.error('Error inesperado en la respuesta del servidor');
+        message.error(t('register_error_generic'));
       }
     }
   });
@@ -64,10 +67,32 @@ const Register2 = () => {
       display: 'flex',
       justifyContent: 'center',
       alignItems: 'center',
-      background: '#f5f5f5',
       padding: '2rem',
+      backgroundColor: token.colorBgBase,
     }}>
-      <Card title="Crear una cuenta" style={{ width: 400 }}>
+      <Card
+        title={t('register_title')}
+        variant="borderless"
+        style={{
+          width: 400,
+          borderRadius: token.borderRadiusLG,
+          boxShadow: isDarkMode
+            ? '0 4px 12px rgba(0, 0, 0, 0.7)'
+            : '0 4px 12px rgba(0, 0, 0, 0.1)',
+          backgroundColor: token.colorBgContainer,
+        }}
+        styles={{
+          header: {
+            borderBottom: isDarkMode
+              ? '1px solid rgba(255, 255, 255, 0.1)'
+              : '1px solid rgba(0, 0, 0, 0.06)',
+            color: token.colorTextBase,
+          },
+          body: {
+            color: token.colorTextBase,
+          }
+        }}
+      >
         <Form
           form={form}
           layout="vertical"
@@ -76,10 +101,10 @@ const Register2 = () => {
         >
           <Form.Item
             name="email"
-            label="Correo electrónico"
+            label={t('register_email_label')}
             rules={[
-              { required: true, message: 'Introduce tu correo' },
-              { type: 'email', message: 'Correo no válido' },
+              { required: true, message: t('register_email_required') },
+              { type: 'email', message: t('register_email_invalid') },
             ]}
           >
             <Input />
@@ -87,24 +112,24 @@ const Register2 = () => {
 
           <Form.Item
             name="password1"
-            label="Contraseña"
-            rules={[{ required: true, message: 'Introduce tu contraseña' }]}
+            label={t('register_password_label')}
+            rules={[{ required: true, message: t('register_password_required') }]}
           >
             <Input.Password />
           </Form.Item>
 
           <Form.Item
             name="password2"
-            label="Repetir contraseña"
+            label={t('register_confirm_password_label')}
             dependencies={['password1']}
             rules={[
-              { required: true, message: 'Repite tu contraseña' },
+              { required: true, message: t('register_confirm_password_required') },
               ({ getFieldValue }) => ({
                 validator(_, value) {
                   if (!value || getFieldValue('password1') === value) {
                     return Promise.resolve();
                   }
-                  return Promise.reject(new Error('Las contraseñas no coinciden'));
+                  return Promise.reject(new Error(t('register_passwords_mismatch')));
                 },
               }),
             ]}
@@ -119,11 +144,10 @@ const Register2 = () => {
               loading={mutation.isLoading}
               block
             >
-              Registrarse
+              {t('register_button')}
             </Button>
           </Form.Item>
         </Form>
-
       </Card>
     </div>
   );

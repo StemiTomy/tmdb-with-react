@@ -1,62 +1,81 @@
 import { createContext, useState, useContext, useEffect } from 'react';
 import PropTypes from 'prop-types';
 import Spinner from '../components/Spinner';
-import { signOut } from "firebase/auth";
-import { auth } from '../../firebaseConfig';
+import { events } from '../api/events';
+import { useLocation } from 'react-router-dom';
+import { message } from 'antd';
+import { fetchUserAuth } from '../api'; // Este llama a /api/auth/user/
 
 const AuthContext = createContext();
 
 export const useAuth = () => useContext(AuthContext);
 
 export const AuthProvider = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [apiKey, setApiKey] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);  // ❌ no usamos localStorage
+  const [user, setUser] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
-  const [error, setError] = useState(null);
+  const location = useLocation();
 
   useEffect(() => {
-    const token = localStorage.getItem('token');
-    const userApiKey = localStorage.getItem('userApiKey');
-    if (token && userApiKey) {
-      setIsAuthenticated(true);
-      setApiKey(userApiKey);
+    const publicRoutes = ['/login', '/register'];
+    
+    if (publicRoutes.includes(location.pathname)) {
+      // 👇 No comprobamos sesión si estamos en rutas públicas
+      setIsLoading(false);
+      return;
     }
-    setIsLoading(false);
-  }, []);
 
-  const login = (token, userApiKey) => {
-    setIsLoading(true);
-    setError(null);
-    localStorage.setItem('token', token);
-    localStorage.setItem('userApiKey', userApiKey);
+    if (user) {
+      setIsAuthenticated(true);
+      setIsLoading(false);
+      return;
+    }
+
+    const checkSession = async () => {
+      try {
+        const userData = await fetchUserAuth();
+        setIsAuthenticated(true);
+        setUser(userData);
+      } catch (error) {
+        console.warn("⛔ Sesión no válida:", error);
+        setIsAuthenticated(false);
+        setUser(null);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    checkSession();
+
+    // 🔁 Nos suscribimos al evento global para detectar expiraciones
+    events.onSessionExpired = () => {
+      message.error('⚡ Sesión expirada, por favor vuelve a iniciar sesión.');
+      setIsAuthenticated(false);
+      setUser(null);
+    };
+
+    return () => {
+      events.onSessionExpired = null;
+    };
+  }, [location.pathname]);
+
+  const login = (userData) => {
     setIsAuthenticated(true);
-    setApiKey(userApiKey);
-    setIsLoading(false);
+    setUser(userData);
   };
 
-  const logout = async () => {
-    setIsLoading(true);
-    setError(null);
-    try {
-      await signOut(auth); // 🔥 esto cierra sesión en Firebase de verdad
-    } catch (error) {
-      console.error("Error al cerrar sesión en Firebase:", error);
-    }
-    localStorage.removeItem('token');
-    localStorage.removeItem('userApiKey');
+  const logout = () => {
     setIsAuthenticated(false);
-    setApiKey('');
-    setIsLoading(false);
+    setUser(null);
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, apiKey, login, logout, isLoading }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, logout, isLoading, user }}>
       {isLoading && !isAuthenticated ? <Spinner /> : children}
     </AuthContext.Provider>
   );
 };
 
 AuthProvider.propTypes = {
-  children: PropTypes.func.isRequired,
+  children: PropTypes.node.isRequired,
 };
-

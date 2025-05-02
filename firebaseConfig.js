@@ -1,6 +1,5 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
-import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
 import { getDatabase } from "firebase/database";
 
@@ -23,7 +22,6 @@ const app = initializeApp(firebaseConfig);
 const auth = getAuth(app);
 const databaseURL = "https://web-app-50f58-default-rtdb.europe-west1.firebasedatabase.app";
 const database = getDatabase(app, databaseURL);
-const analytics = getAnalytics(app);
 
 export {auth, database}
 
